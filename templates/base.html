@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Список продуктов по рецептам{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="{% url 'recipe_list' %}" class="navbar-brand">🍳 Рецепты</a>
+            <ul class="navbar-menu">
+                <li><a href="{% url 'recipe_list' %}">Главная</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'recipe_create' %}">Добавить рецепт</a></li>
+                    <li><a href="{% url 'parse_recipe' %}">Импорт рецепта</a></li>
+                    <li><a href="{% url 'shopping_list' %}">Список покупок</a></li>
+                    <li><a href="{% url 'logout' %}">Выход ({{ user.username }})</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Вход</a></li>
+                    <li><a href="{% url 'register' %}">Регистрация</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Список продуктов по рецептам. Итоговый проект по курсу Python.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
