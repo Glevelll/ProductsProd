@@ -1,0 +1,32 @@
+# Конфигурация Prospector для Django проекта
+
+# Игнорируемые пути
+ignore-paths:
+  - venv
+  - .venv
+  - env
+  - migrations
+  - __pycache__
+  - static
+  - templates
+  - .git
+
+# Настройки pylint для Django
+pylint:
+  load-plugins:
+    - pylint_django
+  options:
+    django-settings-module: 'config.settings'
+  disable:
+    - too-few-public-methods
+    - too-many-arguments
+    - missing-docstring
+    - invalid-name
+
+# Настройки pep8
+pep8:
+  max-line-length: 120
+
+# Строгость проверки
+strictness: medium
+
