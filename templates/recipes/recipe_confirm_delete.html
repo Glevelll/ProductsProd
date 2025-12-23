@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Удалить рецепт - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="recipe-detail">
+    <h1>Удалить рецепт?</h1>
+    
+    <p style="margin: 2rem 0;">
+        Вы действительно хотите удалить рецепт 
+        <strong>"{{ object.title }}"</strong>?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-danger">Да, удалить</button>
+            <a href="{% url 'recipe_detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem; color: #2c3e50;">📈 {{ title }}</h1>
+
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'analytics_dashboard' %}" class="btn btn-secondary">Назад к визуализации</a>
+    <a href="{% url 'dbapi_stats' %}" class="btn btn-primary">dbAPI Статистика</a>
+</div>
+
+{% if recipe_stats %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Общая статистика рецептов</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+            <h4>Всего рецептов</h4>
+            <p style="font-size: 2rem; font-weight: bold; color: #3498db;">{{ recipe_stats.total_recipes }}</p>
+        </div>
+        {% if recipe_stats.statistics.cooking_time %}
+        <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+            <h4>Среднее время</h4>
+            <p style="font-size: 2rem; font-weight: bold; color: #27ae60;">{{ recipe_stats.statistics.cooking_time.mean }} мин</p>
+        </div>
+        <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+            <h4>Медианное время</h4>
+            <p style="font-size: 2rem; font-weight: bold; color: #e67e22;">{{ recipe_stats.statistics.cooking_time.median }} мин</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if recipe_stats.top_authors %}
+    <h3 style="margin-top: 2rem;">Топ авторов</h3>
+    <ul style="list-style: none; padding: 0;">
+        {% for author, count in recipe_stats.top_authors.items %}
+        <li style="padding: 0.5rem; background: #f8f9fa; margin-bottom: 0.5rem; border-radius: 5px;">
+            <strong>{{ author }}</strong>: {{ count }} рецептов
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if ingredient_analysis %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Анализ ингредиентов</h2>
+    <p>Всего ингредиентов: <strong>{{ ingredient_analysis.total_ingredients }}</strong></p>
+    <p>Среднее использование: <strong>{{ ingredient_analysis.avg_usage }}</strong></p>
+
+    {% if ingredient_analysis.most_used %}
+    <h3 style="margin-top: 1.5rem;">Самые используемые</h3>
+    <ul style="list-style: none; padding: 0;">
+        {% for ing in ingredient_analysis.most_used %}
+        <li style="padding: 0.5rem; background: #d4edda; margin-bottom: 0.5rem; border-radius: 5px;">
+            {{ ing.name }}: {{ ing.usage_count }} раз
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if correlation %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Корреляционная матрица</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 8px;">Параметр</th>
+                {% for key in correlation.keys %}
+                <th style="border: 1px solid #ddd; padding: 8px;">{{ key }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for param, values in correlation.items %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">{{ param }}</td>
+                {% for value in values.values %}
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ value|floatformat:2 }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if user_shopping_analysis.total_items %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Ваш список покупок (анализ)</h2>
+    <p>Рецептов в списке: <strong>{{ user_shopping_analysis.total_items }}</strong></p>
+    <p>Общее время приготовления: <strong>{{ user_shopping_analysis.total_cooking_time }} минут</strong></p>
+    <p>Всего порций: <strong>{{ user_shopping_analysis.total_servings }}</strong></p>
+</div>
+{% endif %}
+{% endblock %}
+

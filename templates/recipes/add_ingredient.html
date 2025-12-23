@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить ингредиент - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="recipe-detail">
+    <h1>Добавить ингредиент к рецепту "{{ recipe.title }}"</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

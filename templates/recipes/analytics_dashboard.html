@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem; color: #2c3e50;">📊 Аналитика рецептов</h1>
+
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'statistics' %}" class="btn btn-primary">Pandas Статистика</a>
+    <a href="{% url 'dbapi_stats' %}" class="btn btn-primary">dbAPI Статистика</a>
+    <a href="{% url 'export_excel' %}" class="btn btn-success">Экспорт в Excel</a>
+    <a href="{% url 'export_csv' %}" class="btn btn-success">Экспорт в CSV</a>
+</div>
+
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50; margin-bottom: 1rem;">Визуализация данных (Matplotlib & Seaborn)</h2>
+    <p style="color: #666;">
+        Все графики сгенерированы с помощью библиотек matplotlib и seaborn для анализа данных рецептов.
+    </p>
+</div>
+
+{% if visualizations %}
+    {% if visualizations.cooking_time_distribution %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Распределение времени приготовления</h3>
+        <img src="data:image/png;base64,{{ visualizations.cooking_time_distribution }}" 
+             style="width: 100%; height: auto;" alt="Cooking Time Distribution">
+    </div>
+    {% endif %}
+
+    {% if visualizations.servings_distribution %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Распределение по количеству порций</h3>
+        <img src="data:image/png;base64,{{ visualizations.servings_distribution }}" 
+             style="width: 100%; height: auto;" alt="Servings Distribution">
+    </div>
+    {% endif %}
+
+    {% if visualizations.top_ingredients %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Топ ингредиентов</h3>
+        <img src="data:image/png;base64,{{ visualizations.top_ingredients }}" 
+             style="width: 100%; height: auto;" alt="Top Ingredients">
+    </div>
+    {% endif %}
+
+    {% if visualizations.recipes_by_author %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Распределение рецептов по авторам</h3>
+        <img src="data:image/png;base64,{{ visualizations.recipes_by_author }}" 
+             style="width: 100%; height: auto;" alt="Recipes by Author">
+    </div>
+    {% endif %}
+
+    {% if visualizations.recipes_timeline %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Динамика создания рецептов</h3>
+        <img src="data:image/png;base64,{{ visualizations.recipes_timeline }}" 
+             style="width: 100%; height: auto;" alt="Recipes Timeline">
+    </div>
+    {% endif %}
+
+    {% if visualizations.cooking_time_vs_ingredients %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Время vs Ингредиенты</h3>
+        <img src="data:image/png;base64,{{ visualizations.cooking_time_vs_ingredients }}" 
+             style="width: 100%; height: auto;" alt="Cooking Time vs Ingredients">
+    </div>
+    {% endif %}
+
+    {% if visualizations.correlation_heatmap %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Корреляция параметров</h3>
+        <img src="data:image/png;base64,{{ visualizations.correlation_heatmap }}" 
+             style="width: 100%; height: auto;" alt="Correlation Heatmap">
+    </div>
+    {% endif %}
+
+    {% if visualizations.ingredient_units %}
+    <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <h3 style="color: #2c3e50;">Распределение единиц измерения</h3>
+        <img src="data:image/png;base64,{{ visualizations.ingredient_units }}" 
+             style="width: 100%; height: auto;" alt="Ingredient Units">
+    </div>
+    {% endif %}
+{% else %}
+    <p style="text-align: center; color: #666;">Недостаточно данных для визуализации.</p>
+{% endif %}
+{% endblock %}
+

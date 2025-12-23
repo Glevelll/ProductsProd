@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Список покупок - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem; color: #2c3e50;">Список покупок</h1>
+
+{% if shopping_items %}
+    <div style="margin-bottom: 2rem;">
+        <h2 style="color: #2c3e50; margin-bottom: 1rem;">Выбранные рецепты:</h2>
+        <div class="shopping-list-grid">
+            {% for item in shopping_items %}
+                <div class="shopping-item">
+                    <div>
+                        <strong>{{ item.recipe.title }}</strong>
+                        <br>
+                        <small style="color: #888;">
+                            Добавлен: {{ item.added_at|date:"d.m.Y H:i" }}
+                        </small>
+                    </div>
+                    <a href="{% url 'remove_from_shopping_list' item.recipe.pk %}" 
+                       class="btn btn-danger btn-small"
+                       onclick="return confirm('Удалить рецепт из списка?')">
+                        Удалить
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if shopping_list %}
+        <div class="shopping-summary">
+            <h2>Список продуктов для покупки:</h2>
+            <ul>
+                {% for item in shopping_list %}
+                    <li>
+                        <span><strong>{{ item.name }}</strong></span>
+                        <span>{{ item.quantity }} {{ item.unit }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            <div style="margin-top: 2rem;">
+                <a href="{% url 'clear_shopping_list' %}" 
+                   class="btn btn-danger"
+                   onclick="return confirm('Очистить весь список покупок?')">
+                    Очистить список
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <p style="text-align: center; color: #666; margin-top: 3rem;">
+        Ваш список покупок пуст. 
+        <a href="{% url 'recipe_list' %}">Добавьте рецепты!</a>
+    </p>
+{% endif %}
+{% endblock %}
+

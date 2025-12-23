@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ recipe.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="recipe-detail">
+    <div class="recipe-header">
+        <h1>{{ recipe.title }}</h1>
+        <div class="recipe-info">
+            <span>⏱️ Время: {{ recipe.cooking_time }} мин</span>
+            <span>👥 Порций: {{ recipe.servings }}</span>
+            <span>👤 Автор: {{ recipe.author.username }}</span>
+            <span>📅 {{ recipe.created_at|date:"d.m.Y" }}</span>
+        </div>
+    </div>
+
+    <div class="recipe-section">
+        <h2>Описание</h2>
+        <p>{{ recipe.description }}</p>
+    </div>
+
+    <div class="recipe-section">
+        <h2>Ингредиенты</h2>
+        {% if recipe_ingredients %}
+            <ul class="ingredients-list">
+                {% for ri in recipe_ingredients %}
+                    <li>
+                        <strong>{{ ri.ingredient.name }}</strong>: 
+                        {{ ri.quantity }} {{ ri.ingredient.unit }}
+                        {% if user == recipe.author %}
+                            <a href="{% url 'remove_ingredient' recipe.pk ri.ingredient.pk %}" 
+                               style="color: #e74c3c; margin-left: 1rem;"
+                               onclick="return confirm('Удалить ингредиент?')">
+                                ✕
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="color: #888;">Ингредиенты не добавлены</p>
+        {% endif %}
+        
+        {% if user == recipe.author %}
+            <a href="{% url 'add_ingredient' recipe.pk %}" class="btn btn-secondary btn-small">
+                Добавить ингредиент
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="recipe-section">
+        <h2>Инструкции</h2>
+        <div class="instructions">{{ recipe.instructions }}</div>
+    </div>
+
+    {% if recipe.source_url %}
+        <div class="recipe-section">
+            <h2>Источник</h2>
+            <a href="{{ recipe.source_url }}" target="_blank">{{ recipe.source_url }}</a>
+        </div>
+    {% endif %}
+
+    <div class="recipe-actions">
+        {% if user.is_authenticated %}
+            {% if in_shopping_list %}
+                <a href="{% url 'remove_from_shopping_list' recipe.pk %}" class="btn btn-secondary">
+                    Удалить из списка покупок
+                </a>
+            {% else %}
+                <a href="{% url 'add_to_shopping_list' recipe.pk %}" class="btn btn-success">
+                    Добавить в список покупок
+                </a>
+            {% endif %}
+        {% endif %}
+
+        {% if user == recipe.author %}
+            <a href="{% url 'recipe_update' recipe.pk %}" class="btn btn-primary">
+                Редактировать
+            </a>
+            <a href="{% url 'recipe_delete' recipe.pk %}" class="btn btn-danger"
+               onclick="return confirm('Вы уверены, что хотите удалить этот рецепт?')">
+                Удалить
+            </a>
+        {% endif %}
+        
+        <a href="{% url 'recipe_list' %}" class="btn btn-secondary">
+            Назад к списку
+        </a>
+    </div>
+</div>
+{% endblock %}
+

@@ -17,6 +17,8 @@
                     <li><a href="{% url 'recipe_create' %}">Добавить рецепт</a></li>
                     <li><a href="{% url 'parse_recipe' %}">Импорт рецепта</a></li>
                     <li><a href="{% url 'shopping_list' %}">Список покупок</a></li>
+                    <li><a href="{% url 'analytics_dashboard' %}">📊 Аналитика</a></li>
+                    <li><a href="{% url 'ml_recommendations' %}">🤖 ML Рекомендации</a></li>
                     <li><a href="{% url 'logout' %}">Выход ({{ user.username }})</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Вход</a></li>

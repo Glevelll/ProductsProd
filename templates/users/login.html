@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="recipe-detail" style="max-width: 500px; margin: 2rem auto;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Вход</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="errorlist">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Войти
+        </button>
+    </form>
+
+    <p style="text-align: center; margin-top: 2rem; color: #666;">
+        Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+    </p>
+</div>
+{% endblock %}
+

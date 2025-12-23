@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem; color: #2c3e50;">🔧 {{ title }}</h1>
+
+<div style="background: #fff3cd; padding: 1rem; border-radius: 5px; margin-bottom: 2rem; border-left: 4px solid #ffc107;">
+    <strong>Технология:</strong> Прямые SQL запросы через psycopg2 (dbAPI)
+</div>
+
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'analytics_dashboard' %}" class="btn btn-secondary">Назад к визуализации</a>
+    <a href="{% url 'statistics' %}" class="btn btn-primary">Pandas Статистика</a>
+</div>
+
+{% if recipe_stats %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Статистика рецептов (SQL)</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="padding: 1rem; background: #e3f2fd; border-radius: 5px;">
+            <h4>Всего рецептов</h4>
+            <p style="font-size: 2rem; font-weight: bold;">{{ recipe_stats.total_recipes }}</p>
+        </div>
+        <div style="padding: 1rem; background: #e8f5e9; border-radius: 5px;">
+            <h4>Среднее время</h4>
+            <p style="font-size: 2rem; font-weight: bold;">{{ recipe_stats.avg_cooking_time|floatformat:1 }} мин</p>
+        </div>
+        <div style="padding: 1rem; background: #fff3e0; border-radius: 5px;">
+            <h4>Макс. время</h4>
+            <p style="font-size: 2rem; font-weight: bold;">{{ recipe_stats.max_cooking_time }} мин</p>
+        </div>
+        <div style="padding: 1rem; background: #fce4ec; border-radius: 5px;">
+            <h4>Мин. время</h4>
+            <p style="font-size: 2rem; font-weight: bold;">{{ recipe_stats.min_cooking_time }} мин</p>
+        </div>
+        <div style="padding: 1rem; background: #f3e5f5; border-radius: 5px;">
+            <h4>Средние порции</h4>
+            <p style="font-size: 2rem; font-weight: bold;">{{ recipe_stats.avg_servings|floatformat:1 }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if top_ingredients %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Топ ингредиентов (SQL JOIN)</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f8f9fa;">
+                <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">#</th>
+                <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Ингредиент</th>
+                <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Единица</th>
+                <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Использований</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ing in top_ingredients %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ forloop.counter }}</td>
+                <td style="border: 1px solid #ddd; padding: 12px;"><strong>{{ ing.name }}</strong></td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ ing.unit }}</td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ ing.usage_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if user_stats %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Ваша статистика</h2>
+    <ul style="list-style: none; padding: 0;">
+        <li style="padding: 0.75rem; background: #f8f9fa; margin-bottom: 0.5rem; border-radius: 5px;">
+            Ваших рецептов: <strong>{{ user_stats.total_recipes }}</strong>
+        </li>
+        <li style="padding: 0.75rem; background: #f8f9fa; margin-bottom: 0.5rem; border-radius: 5px;">
+            Среднее время приготовления: <strong>{{ user_stats.avg_cooking_time|floatformat:1 }} мин</strong>
+        </li>
+        <li style="padding: 0.75rem; background: #f8f9fa; margin-bottom: 0.5rem; border-radius: 5px;">
+            Рецептов за последнюю неделю: <strong>{{ user_stats.recent_recipes }}</strong>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% if shopping_summary %}
+<div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+    <h2 style="color: #2c3e50;">Список покупок (SQL GROUP BY)</h2>
+    <ul style="list-style: none; padding: 0;">
+        {% for item in shopping_summary %}
+        <li style="padding: 0.75rem; background: #d4edda; margin-bottom: 0.5rem; border-radius: 5px; display: flex; justify-content: space-between;">
+            <span><strong>{{ item.name }}</strong></span>
+            <span>{{ item.total_quantity }} {{ item.unit }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="recipe-detail">
+    <h1>{{ title }}</h1>
+    
+    <p style="margin-bottom: 2rem; color: #666;">
+        Вставьте URL рецепта с кулинарного сайта, и система автоматически 
+        извлечет название, ингредиенты и инструкции.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <small style="color: #888;">
+                    Пример: https://example.com/recipe/chocolate-cake
+                </small>
+            </div>
+        {% endfor %}
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">Импортировать</button>
+            <a href="{% url 'recipe_list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
