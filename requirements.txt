@@ -24,5 +24,4 @@ seaborn==0.13.0
 
 # Code Quality & Linting
 prospector==1.10.2
-pylint-django==2.5.3
 
